@@ -14,7 +14,7 @@ const BOT_TOKEN = '8196847800:AAEv2mUFM_DDfU6MUv0oDaZ2OYnWXq3ej50';
 const CHAT_ID = '6887114743';
 
 // ===============================
-// TEMPLATE GỬI TELEGRAM (ĐẸP)
+// TEMPLATE TELEGRAM
 // ===============================
 function buildWeatherMessage(data, city = "Hà Nội") {
     const current = data.current;
@@ -94,14 +94,24 @@ async function sendWeather() {
 }
 
 // ===============================
-// CRON: mỗi 1 phút (tùy cậu chỉnh)
+// CRON JOBS
 // ===============================
-cron.schedule("* * * * *", () => {
-    console.log("⏰ Cron mỗi phút → gửi thời tiết...");
+
+// Gửi lúc 06:00 sáng
+cron.schedule("0 6 * * *", () => {
+    console.log("⏰ 06:00 → gửi dự báo thời tiết...");
+    sendWeather();
+}, {
+    timezone: "Asia/Ho_Chi_Minh"
+});
+
+// Gửi lúc 17:00 chiều
+cron.schedule("0 17 * * *", () => {
+    console.log("⏰ 17:00 → gửi dự báo thời tiết...");
     sendWeather();
 }, {
     timezone: "Asia/Ho_Chi_Minh"
 });
 
 // ===============================
-console.log("🚀 Weather bot đang chạy...");
+console.log("🚀 Weather bot đang chạy với cron 06:00 và 17:00...");
