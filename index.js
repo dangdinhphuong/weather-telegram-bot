@@ -5,13 +5,13 @@ import dotenv from "dotenv";
 dotenv.config();
 
 // ===== ENV =====
-const LAT = process.env.WEATHER_LAT || 21.028;
-const LON = process.env.WEATHER_LON || 105.834;
-const CITY = process.env.WEATHER_CITY || "Hà Nội";
+const LAT = 21.028;
+const LON = 105.834;
+const CITY = "Hà Nội";
 
-const API_KEY = process.env.METEOSOURCE_API_KEY;
-const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
-const CHAT_ID = process.env.TELEGRAM_CHAT_ID;
+const API_KEY = '8v1d2gvli05pryvemg6mt25oydf7c04pwkldng8b';
+const BOT_TOKEN = '8196847800:AAEv2mUFM_DDfU6MUv0oDaZ2OYnWXq3ej50';
+const CHAT_ID = '6887114743';
 
 // ===============================
 // TEMPLATE GỬI TELEGRAM (ĐẸP)
