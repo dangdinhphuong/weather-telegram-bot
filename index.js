@@ -1,0 +1,107 @@
+import axios from "axios";
+import cron from "node-cron";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+// ===== ENV =====
+const LAT = process.env.WEATHER_LAT || 21.028;
+const LON = process.env.WEATHER_LON || 105.834;
+const CITY = process.env.WEATHER_CITY || "Hà Nội";
+
+const API_KEY = process.env.METEOSOURCE_API_KEY;
+const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
+const CHAT_ID = process.env.TELEGRAM_CHAT_ID;
+
+// ===============================
+// TEMPLATE GỬI TELEGRAM (ĐẸP)
+// ===============================
+function buildWeatherMessage(data, city = "Hà Nội") {
+    const current = data.current;
+
+    const icons = {
+        "sunny": "☀️",
+        "mostly_sunny": "🌤",
+        "partly_sunny": "⛅",
+        "partly_clear": "🌤",
+        "clear": "🌙",
+        "mostly_clear": "🌙",
+        "fog": "🌫",
+        "cloudy": "☁️",
+        "rain": "🌧",
+        "snow": "❄️"
+    };
+
+    const icon = icons[current.weather] || "🌤";
+
+    const hourly = data.hourly.data.slice(0, 5);
+
+    const hourlyText = hourly.map(h => {
+        const time = h.date.slice(11, 16);
+        const hIcon = icons[h.weather] || "🌤";
+        return `• **${time}** — ${hIcon} ${h.summary} | ${h.temperature}°C | Gió ${h.wind.speed} m/s`;
+    }).join("\n");
+
+    return `
+${icon} **Dự báo thời tiết hôm nay — ${city}**
+
+📌 **Hiện tại:** ${current.summary}  
+🌡 **Nhiệt độ:** ${current.temperature}°C  
+💨 **Gió:** ${current.wind.speed} m/s (hướng ${current.wind.dir})  
+☁️ **Mây:** ${current.cloud_cover}%  
+☔ **Mưa:** ${current.precipitation.total}mm (${current.precipitation.type})
+
+🕒 **Trong 5 giờ tới:**  
+${hourlyText}
+
+💙 Chúc cậu một ngày tuyệt vời!
+    `;
+}
+
+// ===============================
+// LẤY API & GỬI TELEGRAM
+// ===============================
+async function sendWeather() {
+    try {
+        console.log("🔍 Đang lấy dữ liệu Meteosource...");
+
+        const url = "https://www.meteosource.com/api/v1/free/point";
+
+        const res = await axios.get(url, {
+            params: {
+                lat: LAT,
+                lon: LON,
+                sections: "current,hourly",
+                timezone: "Asia/Saigon",
+                language: "en",
+                units: "metric",
+                key: API_KEY
+            }
+        });
+
+        const msg = buildWeatherMessage(res.data, CITY);
+
+        await axios.post(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+            chat_id: CHAT_ID,
+            text: msg,
+            parse_mode: "Markdown"
+        });
+
+        console.log("✔️ Đã gửi dự báo thời tiết vào Telegram.");
+    } catch (err) {
+        console.error("❌ Lỗi:", err.response?.data || err.message);
+    }
+}
+
+// ===============================
+// CRON: mỗi 1 phút (tùy cậu chỉnh)
+// ===============================
+cron.schedule("* * * * *", () => {
+    console.log("⏰ Cron mỗi phút → gửi thời tiết...");
+    sendWeather();
+}, {
+    timezone: "Asia/Ho_Chi_Minh"
+});
+
+// ===============================
+console.log("🚀 Weather bot đang chạy...");
