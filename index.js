@@ -14,11 +14,29 @@ const BOT_TOKEN = '8196847800:AAEv2mUFM_DDfU6MUv0oDaZ2OYnWXq3ej50';
 const CHAT_ID = '6887114743';
 
 // ===============================
+// RANDOM LỜI CHÚC
+// ===============================
+const RANDOM_WISHES = [
+    "💙 Chúc cậu một ngày tuyệt vời!",
+    "✨ Chúc cậu một ngày đầy năng lượng!",
+    "🌼 Mong cậu có một ngày thật dễ chịu nha!",
+    "🍀 Chúc mọi điều tốt đẹp sẽ đến với cậu!",
+    "🌈 Chúc cậu một ngày rực rỡ và bình yên!",
+    "☕ Chúc cậu một ngày làm việc thật hiệu quả!",
+    "💫 Chúc cậu gặp nhiều may mắn hôm nay!",
+];
+
+function getRandomWish() {
+    return RANDOM_WISHES[Math.floor(Math.random() * RANDOM_WISHES.length)];
+}
+
+// ===============================
 // TEMPLATE TELEGRAM
 // ===============================
 function buildWeatherMessage(data, city = "Hà Nội") {
     const current = data.current;
 
+    // Icon thời tiết
     const icons = {
         "sunny": "☀️",
         "mostly_sunny": "🌤",
@@ -32,7 +50,9 @@ function buildWeatherMessage(data, city = "Hà Nội") {
         "snow": "❄️"
     };
 
-    // Lấy thời gian hiện tại theo giờ VN
+    const icon = icons[current.weather] || "🌤";
+
+    // Thời gian hiện tại
     const now = new Date().toLocaleString("vi-VN", {
         timeZone: "Asia/Ho_Chi_Minh",
         hour: "2-digit",
@@ -44,8 +64,7 @@ function buildWeatherMessage(data, city = "Hà Nội") {
         timeZone: "Asia/Ho_Chi_Minh"
     });
 
-    const icon = icons[current.weather] || "🌤";
-
+    // Forecast 5 giờ tới
     const hourly = data.hourly.data.slice(0, 5);
 
     const hourlyText = hourly.map(h => {
@@ -68,7 +87,7 @@ ${icon} **Dự báo thời tiết hôm nay — ${city}**
 🕒 **Trong 5 giờ tới:**  
 ${hourlyText}
 
-💙 Chúc cậu một ngày tuyệt vời!
+${getRandomWish()}
     `;
 }
 
@@ -110,28 +129,17 @@ async function sendWeather() {
 // ===============================
 // CRON JOBS
 // ===============================
+
+// 06:00 sáng
 cron.schedule("0 6 * * *", () => {
     console.log("⏰ 06:00 → gửi dự báo thời tiết...");
     sendWeather();
-}, { timezone: "Asia/Ho_Chi_Minh" });
+}, {timezone: "Asia/Ho_Chi_Minh"});
 
+// 17:00 chiều
 cron.schedule("0 17 * * *", () => {
     console.log("⏰ 17:00 → gửi dự báo thời tiết...");
     sendWeather();
-}, { timezone: "Asia/Ho_Chi_Minh" });
-
-cron.schedule("10 10 * * *", () => {
-    console.log("⏰ 10:10 → gửi dự báo thời tiết...");
-    sendWeather();
-}, { timezone: "Asia/Ho_Chi_Minh" });
-
-
-cron.schedule("*/5 * * * *", () => {
-    console.log("⏰ Mỗi 5 phút → gửi dự báo thời tiết...");
-    sendWeather();
-}, {
-    timezone: "Asia/Ho_Chi_Minh"
-});
-
+}, {timezone: "Asia/Ho_Chi_Minh"});
 // ===============================
-console.log("🚀 Weather bot đang chạy với cron 06:00, 17:00 và 10:10 và mỗi 5p...");
+console.log("🚀 Weather bot đang chạy...");
