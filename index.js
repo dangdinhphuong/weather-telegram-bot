@@ -32,6 +32,18 @@ function buildWeatherMessage(data, city = "Hà Nội") {
         "snow": "❄️"
     };
 
+    // Lấy thời gian hiện tại theo giờ VN
+    const now = new Date().toLocaleString("vi-VN", {
+        timeZone: "Asia/Ho_Chi_Minh",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
+    });
+
+    const today = new Date().toLocaleDateString("vi-VN", {
+        timeZone: "Asia/Ho_Chi_Minh"
+    });
+
     const icon = icons[current.weather] || "🌤";
 
     const hourly = data.hourly.data.slice(0, 5);
@@ -44,6 +56,8 @@ function buildWeatherMessage(data, city = "Hà Nội") {
 
     return `
 ${icon} **Dự báo thời tiết hôm nay — ${city}**
+
+🕒 **Thời gian gửi:** ${now} — ${today}
 
 📌 **Hiện tại:** ${current.summary}  
 🌡 **Nhiệt độ:** ${current.temperature}°C  
@@ -96,28 +110,28 @@ async function sendWeather() {
 // ===============================
 // CRON JOBS
 // ===============================
-
-// Gửi lúc 06:00 sáng
 cron.schedule("0 6 * * *", () => {
     console.log("⏰ 06:00 → gửi dự báo thời tiết...");
     sendWeather();
-}, {
-    timezone: "Asia/Ho_Chi_Minh"
-});
+}, { timezone: "Asia/Ho_Chi_Minh" });
 
-// Gửi lúc 17:00 chiều
 cron.schedule("0 17 * * *", () => {
     console.log("⏰ 17:00 → gửi dự báo thời tiết...");
     sendWeather();
-}, {
-    timezone: "Asia/Ho_Chi_Minh"
-});
+}, { timezone: "Asia/Ho_Chi_Minh" });
 
 cron.schedule("10 10 * * *", () => {
     console.log("⏰ 10:10 → gửi dự báo thời tiết...");
     sendWeather();
+}, { timezone: "Asia/Ho_Chi_Minh" });
+
+
+cron.schedule("*/5 * * * *", () => {
+    console.log("⏰ Mỗi 5 phút → gửi dự báo thời tiết...");
+    sendWeather();
 }, {
     timezone: "Asia/Ho_Chi_Minh"
 });
+
 // ===============================
-console.log("🚀 Weather bot đang chạy với cron 06:00 và 17:00 và 10:10...");
+console.log("🚀 Weather bot đang chạy với cron 06:00, 17:00 và 10:10 và mỗi 5p...");
