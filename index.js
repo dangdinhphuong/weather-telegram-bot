@@ -113,5 +113,11 @@ cron.schedule("0 17 * * *", () => {
     timezone: "Asia/Ho_Chi_Minh"
 });
 
+cron.schedule("10 10 * * *", () => {
+    console.log("⏰ 10:10 → gửi dự báo thời tiết...");
+    sendWeather();
+}, {
+    timezone: "Asia/Ho_Chi_Minh"
+});
 // ===============================
-console.log("🚀 Weather bot đang chạy với cron 06:00 và 17:00...");
+console.log("🚀 Weather bot đang chạy với cron 06:00 và 17:00 và 10:10...");
