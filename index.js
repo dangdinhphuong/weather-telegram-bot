@@ -1,6 +1,7 @@
 import axios from "axios";
 import cron from "node-cron";
 import dotenv from "dotenv";
+import http from "http";
 
 dotenv.config();
 
@@ -143,3 +144,18 @@ cron.schedule("0 17 * * *", () => {
 }, {timezone: "Asia/Ho_Chi_Minh"});
 // ===============================
 console.log("🚀 Weather bot đang chạy...");
+
+
+// ===============================
+// FAKE WEB SERVER
+// ===============================
+
+const PORT = process.env.PORT || 10000;
+
+// Fake web server để Render khỏi báo lỗi Port scan
+http.createServer((req, res) => {
+    res.writeHead(200, { "Content-Type": "text/plain" });
+    res.end("Weather bot is running.\n");
+}).listen(PORT, () => {
+    console.log("🌐 Fake web server running on port " + PORT);
+});
