@@ -127,13 +127,9 @@ async function sendWeather(sendTelegram = true) {
 cron.schedule("0 6 * * *", () => sendWeather(true), {
   timezone: "Asia/Ho_Chi_Minh",
 });
-cron.schedule("0 17 * * *", () => sendWeather(true), {
+cron.schedule("0 18 * * *", () => sendWeather(true), {
   timezone: "Asia/Ho_Chi_Minh",
 });
-cron.schedule( "*/5 * * * *",() => {console.log("⏰ Cron chạy mỗi 5 phút...");sendWeather();
-  },
-  { timezone: "Asia/Ho_Chi_Minh" }
-);
 
 // =========================
 // API SERVER
