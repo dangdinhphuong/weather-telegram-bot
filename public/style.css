@@ -1,0 +1,51 @@
+body {
+    background: linear-gradient(145deg, #1e293b, #0f172a);
+    color: white;
+    font-family: sans-serif;
+    padding: 20px;
+}
+
+.widget {
+    background: rgba(255,255,255,0.08);
+    padding: 20px;
+    border-radius: 20px;
+    max-width: 360px;
+    margin: auto;
+    backdrop-filter: blur(22px);
+}
+
+.big-temp {
+    font-size: 48px;
+    font-weight: bold;
+}
+
+.summary {
+    font-size: 18px;
+    margin-bottom: 8px;
+}
+
+.small {
+    opacity: 0.85;
+}
+
+.time {
+    margin-top: 10px;
+    opacity: 0.7;
+}
+
+.btn {
+    background: #ffffff22;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-bottom: 12px;
+    color: white;
+    text-align: center;
+}
+.history .item {
+    background: rgba(255,255,255,0.05);
+    padding: 10px 14px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+}
